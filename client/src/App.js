@@ -6,8 +6,8 @@ import Contect from "./pages/Contect";
 import Policy from "./pages/Policy";
 import PageNotFound from "./pages/PageNotFound";
 import './App.css';
-import Register from "./pages/Register";
-import Login from "./pages/Login";
+import Register from "./pages/auth/Register";
+import Login from "./pages/auth/Login";
 import Cart from "./pages/Cart";
 
 function App() {
