@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { RiShoppingBag3Fill } from "react-icons/ri";
 
 const Header = () => {
   return (
@@ -19,7 +20,7 @@ const Header = () => {
 
           <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
             <NavLink to="/" className="navbar-brand">
-              Hidden brand
+            <RiShoppingBag3Fill /> Town Shop
             </NavLink>
 
             <ul className=" navbar-nav ms-auto mb-2 mb-lg-0">
