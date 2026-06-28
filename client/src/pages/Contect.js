@@ -3,7 +3,9 @@ import { BiSupport, BiPhoneCall, BiMailSend  } from "react-icons/bi";
 
 const Contect = () => {
   return (
-     <Layout>
+     <Layout title= {'Contect Us - Town Shop'}  discription= {"Town Shop is your trusted online shopping destination for fashion, electronics, home essentials, beauty products, and more. Enjoy secure payments, fast delivery, and great deals."}
+  keywords={"Town Shop, online shopping, e-commerce, fashion, electronics, clothing, home appliances, beauty products, accessories, online store, best deals, shopping website"}
+  author={"Rohit Chauhan"}>
       <div className="row contectus mt-5">
         <div className="col-md-6">
           <img src="/image/image1.jpg" alt="ContectImage" style={{width:"100%"}}/>
