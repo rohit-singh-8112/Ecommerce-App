@@ -99,3 +99,28 @@ Page Not Found
 .about-text{
   padding: 10px 20px 5px 20px !important;
 }
+
+/* -----------------------------------------
+Register
+----------------------------------------- */
+
+.register{
+  display: flex;
+  flex-direction:column;
+  min-height: 70vh;
+  align-items: center;
+  justify-content: center;
+}
+.password {
+  position: relative;
+}
+
+.password span {
+  position: absolute;
+  top: 40%;
+  right: 15px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 22px;
+  color: #666;
+}
