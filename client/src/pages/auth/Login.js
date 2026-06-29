@@ -1,12 +1,11 @@
 import toast from "react-hot-toast";
 import Layout from "../../component/layout/Layout"
 import'../../styles/authStyles.css';
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { BiHide, BiShowAlt } from "react-icons/bi";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-
+import {useAuth} from "../../context/auth"
 
 
 
@@ -15,22 +14,23 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(true);
   const navigate = useNavigate();
-  const [storage, setStorage] = useState(()=>JSON.parse(localStorage.getItem("user"))||[]);
+  const {auth, setAuth} = useAuth();
 
-useEffect(()=>{
-  localStorage.setItem("user", JSON.stringify(storage))
-},[storage])
+
 
   const handlerSubmit = async(e) =>{
     e.preventDefault();
     try{
       const res = await axios.post(`${process.env.REACT_APP_API}/api/v1/auth/login`,{email, password});
       // console.log(res.data.message);
-      const user = res.data.user;
+      
       if (res.data.success){
         toast.success("Success fully login");
-        setStorage(res.data.user);
-        if(user.role === 0){
+        setAuth(
+          {...auth, user:res.data.user, token:res.data.token}
+        );
+        localStorage.setItem('auth', JSON.stringify(res.data));
+        if(res.data.user.role === 0){
           navigate("/");
         }else{
            navigate("/SallerHome");

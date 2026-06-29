@@ -1,7 +1,23 @@
 import { NavLink } from "react-router-dom";
 import { RiShoppingBag3Fill } from "react-icons/ri";
+import { useAuth } from "../../context/auth";
+// import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Header = () => {
+  const {auth, setAuth} = useAuth();
+  // const navigate = useNavigate();
+    const handalLogout = () => {
+        localStorage.removeItem('auth');
+        setAuth({
+          ...auth, 
+          user:null,
+          token:""
+        })
+        toast.success("Logout successfully");
+       
+    }
+
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -36,17 +52,29 @@ const Header = () => {
                 </NavLink>
               </li>
 
-              <li className="nav-item">
-                <NavLink to="/Register" className="nav-link">
-                  Registor
-                </NavLink>
-              </li>
+              {!auth.user ? (
+                <>
+                  <li className="nav-item">
+                    <NavLink to="/Register" className="nav-link">
+                      Registor
+                    </NavLink>
+                  </li>
 
-              <li className="nav-item">
-                <NavLink to="/Login" className="nav-link">
-                  Login
-                </NavLink>
-              </li>
+                  <li className="nav-item">
+                    <NavLink to="/Login" className="nav-link">
+                      Login
+                    </NavLink>
+                  </li>
+                </>
+              ):(<>
+                <li className="nav-item">
+                  <NavLink to="/Login" onClick={handalLogout} className="nav-link logout">
+                    Logout
+                  </NavLink>
+                </li>
+                </>
+              )}
+
 
               <li className="nav-item">
                 <NavLink
