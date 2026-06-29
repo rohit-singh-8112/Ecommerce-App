@@ -9,6 +9,7 @@ import './App.css';
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import Cart from "./pages/Cart";
+import SallerHomePage from "./pages/SallerHomePage";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
         <Route path="/Cart" element={<Cart />} />
+        <Route path="/SallerHome" element={<SallerHomePage />}/>
       </Routes>
       
     </>
