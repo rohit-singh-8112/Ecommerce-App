@@ -13,6 +13,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [answer, setAnswer] = useState("");
   const [check, setCheck] = useState(false);
   const [show, setShow] = useState(true);
   const navigate = useNavigate();
@@ -55,6 +56,9 @@ const Register = () => {
           </div>
           <div className="mb-3">
             <input placeholder="Address" value={address} onChange={(e)=>setAddress(e.target.value)} type="text" className="form-control" id="exampleInputName1" aria-describedby="emailHelp" required />
+          </div>
+          <div className="mb-3">
+            <input placeholder="Your Best Friend Name ?" value={answer} onChange={(e)=>setAnswer(e.target.value)} type="text" className="form-control" id="exampleInputName1" aria-describedby="emailHelp" required />
           </div>
           <div className="mb-3 form-check">
             <input type="checkbox" checked={check} onChange={(e) => setCheck(e.target.checked)} className="form-check-input box" id="exampleCheck1" />

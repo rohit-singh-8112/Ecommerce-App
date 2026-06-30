@@ -1,4 +1,4 @@
-import { comparePassword, hashPassword } from "../helpers/authHelper.js";
+import { comparePassword, hashPassword} from "../helpers/authHelper.js";
 import userModel from "../models/userModel.js";
 import JWT from "jsonwebtoken";
 
@@ -101,12 +101,50 @@ export const registerController = async(req, res) => {
     }catch(error){
         console.log(error)
         res.status(500).send({
-            success:true,
+            success:false,
             message:"error in login",
             error,
         })
     }
  }
+
+//Forget Password
+export const forgetPasswordController = async(req,res) =>{
+    try{
+        const {email, answer, nawPassword} = req.body
+        if(!email){
+            res.status(400).send({message:'email is required'})
+        }
+        if(!answer){
+            res.status(400).send({message:'answer is required'})
+        }
+        if(!nawPassword){
+            res.status(400).send({message:'Naw password is required'})
+        }
+
+        //check 
+        const user = await userModel.findOne({email, answer})
+        if(!email || !answer){
+            res.status(400).send({
+                success: false,
+                message: "wrong Email or answer"
+            })
+        }
+        const hashed = await hashPassword(nawPassword) 
+        await userModel.findByIdAndUpdate(user._id,{ password:nawPassword })
+        res.status(200).send({
+            success:true,
+            message:"Password reset successfully",
+        })
+    }catch(error){
+        console.log(error); 
+        res.status(500).send({
+            success: false,
+            message:"Something went worng",
+            error
+        })
+    }
+};
 
 //testController
 
