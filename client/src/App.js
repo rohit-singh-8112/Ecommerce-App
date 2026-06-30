@@ -10,12 +10,18 @@ import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import Cart from "./pages/Cart";
 import SallerHomePage from "./pages/SallerHomePage";
+import Dashboard from "./pages/user/Dashboard";
+import PrivateRoute from "./component/Routes/Private";
 
+ 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/Dashboard" element={<PrivateRoute />}>
+          <Route path="" element={<Dashboard />} />
+        </Route>
         <Route path="/About" element={<About />} />
         <Route path="/Contect" element={<Contect />} />
         <Route path="/Policy" element={<Policy />} />

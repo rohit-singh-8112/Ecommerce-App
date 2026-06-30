@@ -4,7 +4,7 @@ import'../../styles/authStyles.css';
 import { useState} from "react";
 import { BiHide, BiShowAlt } from "react-icons/bi";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {useAuth} from "../../context/auth"
 
 
@@ -15,7 +15,7 @@ const Login = () => {
   const [show, setShow] = useState(true);
   const navigate = useNavigate();
   const {auth, setAuth} = useAuth();
-
+  const location = useLocation();
 
 
   const handlerSubmit = async(e) =>{
@@ -31,9 +31,9 @@ const Login = () => {
         );
         localStorage.setItem('auth', JSON.stringify(res.data));
         if(res.data.user.role === 0){
-          navigate("/");
+          navigate(location.state || "/");
         }else{
-           navigate("/SallerHome");
+           navigate(location.state || "/SallerHome");
         }
       }else{
         toast.error(res.data.message);
