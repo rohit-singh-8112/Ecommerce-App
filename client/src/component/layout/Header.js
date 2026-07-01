@@ -51,7 +51,6 @@ const Header = () => {
                   category
                 </NavLink>
               </li>
-
               {!auth.user ? (
                 <>
                   <li className="nav-item">
@@ -59,7 +58,6 @@ const Header = () => {
                       Registor
                     </NavLink>
                   </li>
-
                   <li className="nav-item">
                     <NavLink to="/Login" className="nav-link">
                       Login
@@ -67,15 +65,15 @@ const Header = () => {
                   </li>
                 </>
               ):(<>
-                <li className="nav-item">
-                  <NavLink to="/Login" onClick={handalLogout} className="nav-link logout">
-                    Logout
-                  </NavLink>
-                </li>
+                  <li className="nav-item dropdown">
+                    <NavLink className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{auth?.user.name}</NavLink>
+                    <ul className="dropdown-menu">
+                      <li  className="nav-item"><NavLink to="/Dashboard" className="nav-link logout">Dashboard</NavLink></li>
+                      <li  className="nav-item"><NavLink to="/Login" onClick={handalLogout} className="nav-link logout">Logout</NavLink></li>
+                    </ul>
+                  </li>
                 </>
               )}
-
-
               <li className="nav-item">
                 <NavLink
                   to="/Cart"

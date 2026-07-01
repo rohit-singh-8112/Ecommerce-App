@@ -12,6 +12,7 @@ import Cart from "./pages/Cart";
 import SallerHomePage from "./pages/SallerHomePage";
 import Dashboard from "./pages/user/Dashboard";
 import PrivateRoute from "./component/Routes/Private";
+import ForgetPassword from "./pages/auth/ForgetPassword";
 
  
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register />} />
+        <Route path="/Forget-Password" element={<ForgetPassword />} />
         <Route path="/Cart" element={<Cart />} />
         <Route path="/SallerHome" element={<SallerHomePage />}/>
       </Routes>

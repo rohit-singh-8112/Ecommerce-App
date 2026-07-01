@@ -58,6 +58,9 @@ const Login = () => {
           <div className="justify-content-center ">
             <button type="submit" className="btn btn-primary ">Login</button>
           </div>
+          <div className="justify-content-center mt-3 ">
+            <button type="button" onClick={()=> navigate("/Forget-Password")} className="btn-primary" >Forget Password</button>
+          </div>
         </form>
       </div>
     </Layout>
