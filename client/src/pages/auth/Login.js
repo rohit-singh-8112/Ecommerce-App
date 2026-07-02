@@ -30,11 +30,16 @@ const Login = () => {
           {...auth, user:res.data.user, token:res.data.token}
         );
         localStorage.setItem('auth', JSON.stringify(res.data));
-        if(res.data.user.role === 0){
-          navigate(location.state || "/");
-        }else{
-           navigate(location.state || "/SallerHome");
-        }
+        navigate(location.state || "/");
+
+
+        // if(res.data.user.role === 0){
+        //   navigate(location.state || "/");
+        // }else{
+        //    navigate(location.state || "/SallerHome");
+        // }
+
+        
       }else{
         toast.error(res.data.message);
       }
