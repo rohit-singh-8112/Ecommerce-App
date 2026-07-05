@@ -4,7 +4,7 @@ import AdminMenu from '../../component/layout/AdminMenu'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import CategoryForm from '../../component/Form/CategoryForm';
-import { Modal, Select } from 'antd';
+import { Modal} from 'antd';
 
 
 
