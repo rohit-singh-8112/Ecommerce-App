@@ -9,6 +9,7 @@ const CreateProduct = () => {
     const [categories, setCategories] = useState([]);
     const [ name, setName ] = useState("");
     const [ description, setDescription ] = useState("");
+    const [category, setCategory] = useState("");
     const [ price, setPrice ] = useState("");
     const [ quentity, setQuentity ] = useState("");
     const [ shipping, setShipping ] = useState("");
@@ -40,6 +41,12 @@ const CreateProduct = () => {
                 </div>
                 <div className="col-md-9">
                     <h1>Create Product</h1> 
+                    <div className="m-1 w-75">
+                        <Select bordered={false} placeholder="Select a Category" size="large" showSearch className="form-select mb-3" onChange={(value)=>{setCategory(value)}}>
+                            {}
+
+                        </Select>
+                    </div>
                 </div>
             </div>
         </div>
