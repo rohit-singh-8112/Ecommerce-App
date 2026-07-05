@@ -3,13 +3,21 @@ import Layout from '../../component/layout/Layout'
 import AdminMenu from '../../component/layout/AdminMenu'
 import toast from 'react-hot-toast'
 import axios from 'axios'
-import CategoryForm from '../../component/Form/CategoryForm'
+import CategoryForm from '../../component/Form/CategoryForm';
+import { Modal, Select } from 'antd';
+
+
 
 
 
 const CreateCategory = () => {
     const [category, setCategory] = useState([]);
     const [name, setName] = useState("");
+    const [visible, setVisible] = useState(false);
+    const [updatedName, setUpdatedName] = useState("");
+    const [selected, setSelected] = useState(null);
+
+
     const handleSubmit = async(e) =>{
         e.preventDefault()
         try{
@@ -17,6 +25,7 @@ const CreateCategory = () => {
              if (res?.data.success){
                 toast.success(`${name} is Created.`)
                 getAllCategory();
+                setName("");
              }else{
                 toast.error(res.data.message);
              }
@@ -42,6 +51,45 @@ const CreateCategory = () => {
     useEffect(()=>{
         getAllCategory();
     },[])
+
+
+    const handleUpdate = async(e) =>{
+        e.preventDefault()
+        try{
+            const res = await axios.put(`${process.env.REACT_APP_API}/api/v1/category/update-category/${selected._id}`, {name:updatedName});
+            if(res.data.success){
+                toast.success(res.data.message);
+                setSelected(null);
+                setUpdatedName("");
+                getAllCategory();
+                setVisible(false);
+            }else{
+                toast.error(res.data.message)
+            }
+
+
+        }catch(error){
+            console.log(error);
+            toast.error("something wrong in update input");
+        }
+    }
+
+    const handleDelete = async(id) =>{
+        try{
+            const res = await axios.delete(`${process.env.REACT_APP_API}/api/v1/category/delete-category/${id}`);
+            if(res.data.success){
+                toast.success(res.data.message);
+                getAllCategory();
+                setSelected(null);
+            }else{
+                toast.error(res.data.message);
+            }
+
+        }catch(error){
+            console.log(error);
+            toast.error("Something wrong in delete")
+        }
+    }
 
   return (
     <Layout
@@ -79,8 +127,8 @@ const CreateCategory = () => {
                             <tr>
                                 <td key={c._id}>{c.name}</td>
                                 <td>
-                                <button className="btn btn-primary ms-2">Edit</button>
-                                <button className="btn btn-danger ms-2">Delete</button>
+                                <button className="btn btn-primary ms-2" onClick={()=>{setVisible(true); setUpdatedName(c.name); setSelected(c)}}>Edit</button>
+                                <button className="btn btn-danger ms-2" onClick={()=>{handleDelete(c._id)}} >Delete</button>
                                 </td>
                             </tr>
                         </>
@@ -89,6 +137,14 @@ const CreateCategory = () => {
                 </tbody>
               </table>
             </div>
+            <Modal
+                title="Change Category Name"
+                closable={{ 'aria-label': 'Custom Close Button' }}
+                open={visible}
+                footer={null}
+                onCancel={()=>setVisible(false)}>
+                <CategoryForm value={updatedName} setValue={setUpdatedName} handleSubmit={handleUpdate} />
+            </Modal>
           </div>
         </div>
       </div>
