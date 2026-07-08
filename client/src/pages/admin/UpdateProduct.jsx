@@ -3,10 +3,16 @@ import Layout from '../../component/layout/Layout'
 import AdminMenu from '../../component/layout/AdminMenu'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import { useParams, useNavigate  } from 'react-router-dom'
 import {Select} from "antd";
 const {Option} = Select
-const CreateProduct = () => {
+
+
+const UpdateProduct = () => {
+    const params = useParams();
+    const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
+    const [products, setProducts] = useState([]);
     const [ name, setName ] = useState("");
     const [ description, setDescription ] = useState("");
     const [category, setCategory] = useState("");
@@ -14,6 +20,30 @@ const CreateProduct = () => {
     const [ quentity, setQuentity ] = useState("");
     const [ shipping, setShipping ] = useState("");
     const [photo, setPhoto] = useState("");
+    
+    //get single product
+    const getSingleProduct = async() =>{
+        try{
+            const {data} = await axios.get(`${process.env.REACT_APP_API}/api/v1/product/get-product/${params.slug}`);
+            if(data.success){
+                setProducts(data.product);
+                setName(data.product.name)
+                setDescription(data.product.description)
+                setCategory(data.product.category._id)
+                setPrice(data.product.price)
+                setQuentity(data.product.quantity)
+                setShipping(data.product.shipping)
+                setPhoto(data.product.photo)
+                // setCategoryId(data.product.)
+                // console.log(data.product.category._id)
+
+            }
+        }catch(error){
+            console.log(error)
+            toast.error("wrong in get update single product");
+        }
+
+    }
 
 
     //get all category
@@ -22,7 +52,6 @@ const CreateProduct = () => {
             const {data} = await axios.get(`${process.env.REACT_APP_API}/api/v1/category/get-category`);
             if(data?.success){
                 setCategories(data?.category);
-                
             }
         }catch(error){
             console.log(error);
@@ -31,10 +60,11 @@ const CreateProduct = () => {
     }
     useEffect(()=>{
         getAllCategory();
-       
+        getSingleProduct();
+        //eslint-disable-next-line
     },[])
 
-    const handleCreateProduct = async(e) =>{
+    const handleUpdateProduct = async(e) =>{
         e.preventDefault()
         try{
             const product = new FormData()
@@ -45,21 +75,23 @@ const CreateProduct = () => {
             product.append("quantity", quentity)
             product.append("photo", photo)
             product.append("shipping", shipping)
-            const {data} = await axios.post(`${process.env.REACT_APP_API}/api/v1/product/create-product`, product)
+            const {data} = await axios.put(`${process.env.REACT_APP_API}/api/v1/product/update-product/${products._id}`, product)
             if(data?.success){
                 toast.success(data?.message);
+                navigate("/Dashboard/admin/products");
             }else{
                 toast.error(data?.message)
             }
 
         }catch(error){
             console.log(error);
-            toast.error("Something wrong in create product");
+            toast.error("Something wrong in Update product");
         }
     }
+
   return (
     <Layout
-      title={"Dashboard - Create Product"}
+      title={"Dashboard - Update Product"}
       discription={
         "Town Shop is your trusted online shopping destination for fashion, electronics, home essentials, beauty products, and more. Enjoy secure payments, fast delivery, and great deals."
       }
@@ -74,7 +106,7 @@ const CreateProduct = () => {
             <AdminMenu />
           </div>
           <div className="col-md-9">
-            <h1>Create Product</h1>
+            <h1>Update Product</h1>
             <div className="m-1 w-75">
                 <Select
                     variant={false}
@@ -86,10 +118,11 @@ const CreateProduct = () => {
                     onChange={(value) => {
                     setCategory(value);
                     }}
+                    value={category}
                 >
                     {categories.map((c) => (
                     <Option key={c._id} value={c._id}>
-                        {c.name}
+                        {c._id === category._id && c.name }{c.name}
                     </Option>
                     ))}
                 </Select>
@@ -100,9 +133,13 @@ const CreateProduct = () => {
                     </label>
                 </div>
                 <div className="mb-3">
-                    {photo && (
+                    {photo ? (
                         <div className="text-center">
                             <img src={URL.createObjectURL(photo)} alt="Product_photo" height={"200px"} className='img img-resposive'/>
+                        </div>
+                    ):(
+                        <div className="text-center">
+                            <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${products._id}`} alt="Product_photo" height={"200px"} className='img img-resposive'/>
                         </div>
                     )}
                 </div>
@@ -121,20 +158,21 @@ const CreateProduct = () => {
                         onChange={(value) => {
                         setShipping(value);
                         }}
+                        value={shipping == "1" ? "yes": "no"}
                     >
                         <Option value ="0">No</Option>
                         <Option value ="1">Yes</Option>
                     </Select>
                 </div>
                 <div className="mb-3">
-                    <button className="btn btn-primary" onClick={handleCreateProduct}>CREATE PRODUCT</button>
+                    <button className="btn btn-primary" onClick={handleUpdateProduct}>UPDATE PRODUCT</button>
                 </div>
             </div>
           </div>
         </div>
       </div>
     </Layout>
-  );
+  )
 }
 
-export default CreateProduct
+export default UpdateProduct

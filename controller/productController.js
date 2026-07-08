@@ -147,7 +147,20 @@ import slugify from "slugify";
             }
         }
 
-        const products = await ProductModel.findByIdAndUpdate( req.params.pid, { ...req.fields, slug: slugify(name) }, { new: true } );  
+        const products = await ProductModel.findByIdAndUpdate(
+            req.params.pid,
+            {
+                ...req.fields,
+                slug: slugify(name),
+            },
+            { new: true }
+        );
+
+        if (photo) {
+            products.photo.data = fs.readFileSync(photo.filepath);
+            products.photo.contentType = photo.type;
+            await products.save();
+        }
         res.status(200).send({
             success:true,
             message:"Product Updated Successfully",
