@@ -12,7 +12,8 @@ const HomePage = () => {
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
   const [radio, setRadio] = useState([]);
-  const [price, setPrice] = useState(499);
+
+
 
 //get all Categories
   const getAllCategory = async() =>{
@@ -23,6 +24,10 @@ const HomePage = () => {
         console.log(error);
     }
 }
+useEffect(()=>{
+
+  getAllCategory();
+},[]);
 
 //get All Products
   const getAllProducts = async() =>{
@@ -45,10 +50,23 @@ const HomePage = () => {
   }
 
   useEffect(()=>{
-    getAllProducts();
-    getAllCategory();
-  },[]);
+   if(!checked.length || !radio.length) getAllProducts();
+  
+  },[checked.length, radio.length]);
+  useEffect(()=>{
+    if(checked.length || radio.length) filterProduct();
 
+   },[checked, radio]);
+
+//get Filtered products
+const filterProduct = async()=>{
+  try{
+    const {data} = await axios.post(`${process.env.REACT_APP_API}/api/v1/product/filter-product`,{checked, radio})
+    setProducts(data?.products);
+  }catch(error){
+    console.log(error)
+  }
+}
 
   return (
     <Layout title= {'Town Shop | Online Shopping for Fashion, Electronics & More'} discription= {"Town Shop is your trusted online shopping destination for fashion, electronics, home essentials, beauty products, and more. Enjoy secure payments, fast delivery, and great deals."} keywords={"Town Shop, online shopping, e-commerce, fashion, electronics, clothing, home appliances, beauty products, accessories, online store, best deals, shopping website"} author={"Rohit Chauhan"}>
@@ -62,17 +80,7 @@ const HomePage = () => {
             </div>
             <h4 className="text-center mt-4" >filter By Price</h4>
             <div className="d-flex flex-column ms-3">
-              <div>
-                  <h3>Price: ₹{price}</h3>
-                  <input
-                    type="range"
-                    min="0"
-                    max="5000"
-                    step="1"
-                    value={price}
-                    onChange={(e) => setPrice(Number(e.target.value))}
-                  />
-                </div>
+              
                 <Radio.Group onChange={e=>setRadio(e.target.value)}>
                   {Prices?.map(p=>(
                     <div key={p._id}>
@@ -84,7 +92,7 @@ const HomePage = () => {
             </div>
         </div>
         <div className="col-md-10">
-          {JSON.stringify(radio, null, 4)}
+          {/* {JSON.stringify(radio, null, 4)} */}
           <h1 className="text-center">All Product</h1>
           <div className="d-flex flex-wrap justify-content-around">
           {products.map((p)=>
@@ -92,8 +100,9 @@ const HomePage = () => {
                 <div className="card m-2" style={{width: '18rem'}}>
                     <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`} loading="lazy" className="card-img-top" height="250px" alt={p.name} />
                     <div className="card-body">
-                        <h5 className="card-title">{p.name}</h5>
-                        <p className="card-text">{p.description}</p>
+                        <h5 className="card-title">{p.name.substring(0,20)}...</h5>
+                        <p className="card-text">{p.description.substring(0,50)}...</p>
+                        <p>₹{p.price}</p>
                         <div className="d-flex justify-content-around">
                           <button className="btn btn-secondary ">More Details</button>
                           <button className="btn btn-primary">Add To Cart</button>

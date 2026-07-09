@@ -177,4 +177,28 @@ import slugify from "slugify";
             error,
         })
     }
+ };
+
+
+ //filter Product
+
+ export const filterProductController = async(req,res) =>{
+    try{
+        const {checked, radio} = req.body;
+        let arg = {}
+        if(checked.length>0) arg.checked = checked;
+        if(radio.length>0) arg.radio = {$gte: radio[0], $lte:radio[1]};
+        const products = await ProductModel.find(arg);
+        res.status(200).send({
+            success:true,
+            products
+        });
+    }catch(error){
+        console.log(error);
+        res.status(400).send({
+            success:false,
+            message:"error in filter",
+            error
+        })
+    }
  }

@@ -41,8 +41,8 @@ const Product = () => {
                                 <div className="card mb-2" style={{width: '18rem'}}>
                                     <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`} loading="lazy" className="card-img-top" height="250px" alt={p.name} />
                                     <div className="card-body">
-                                        <h5 className="card-title">{p.name}</h5>
-                                        <p className="card-text">{p.description}</p>
+                                        <h5 className="card-title">{p.name.substring(0,20)}...</h5>
+                                        <p className="card-text">{p.description.substring(0,50)}...</p>
                                     </div>
                                 </div>
                             </NavLink>
