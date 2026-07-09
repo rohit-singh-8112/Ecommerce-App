@@ -19,7 +19,8 @@ const UpdateProduct = () => {
     const [ price, setPrice ] = useState("");
     const [ quentity, setQuentity ] = useState("");
     const [ shipping, setShipping ] = useState("");
-    const [photo, setPhoto] = useState("");
+    const [photo, setPhoto] = useState();
+    const [error, setError] = useState();
     
     //get single product
     const getSingleProduct = async() =>{
@@ -88,6 +89,32 @@ const UpdateProduct = () => {
             toast.error("Something wrong in Update product");
         }
     }
+//Delete product
+    const handleDeleteProduct = async(e) =>{
+        e.preventDefault()
+        try{
+            const {data} = await axios.delete(`${process.env.REACT_APP_API}/api/v1/product/delete-product/${products._id}`);
+            if (data.success){
+                toast.success(data.message)
+                navigate("/Dashboard/admin/products")
+            }else{
+                toast.error(data.message)
+                
+            }
+        }catch(error){
+            console.table(error)
+            toast.error("wrong in delete product")
+        }
+    }
+        useEffect(()=>{
+            if(!photo) return;
+            const MAX_SIZE = 2097151;
+            if(photo.size > MAX_SIZE){
+                setError('File is too large. Maximum size is 2MB.');
+            }else{
+                setError('');
+            }
+        },[photo])
 
   return (
     <Layout
@@ -130,6 +157,7 @@ const UpdateProduct = () => {
                     <label className='btn btn-outline-secondary col-md-12'>
                         {photo ?  photo.name : "Upload Photo"}  
                         <input type="file" name="Photo" accept="image/*" onChange={(e)=>setPhoto(e.target.files[0])} hidden/>
+                        {error && <p style={{ color: 'red' }}>{error}</p>}
                     </label>
                 </div>
                 <div className="mb-3">
@@ -166,6 +194,7 @@ const UpdateProduct = () => {
                 </div>
                 <div className="mb-3">
                     <button className="btn btn-primary" onClick={handleUpdateProduct}>UPDATE PRODUCT</button>
+                    <button className="btn m-2 btn-danger" onClick={handleDeleteProduct}>DELETE PRODUCT</button>
                 </div>
             </div>
           </div>

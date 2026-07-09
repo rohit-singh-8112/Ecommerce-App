@@ -2,10 +2,12 @@ import React,{useEffect, useState} from 'react'
 import Layout from '../../component/layout/Layout'
 import AdminMenu from '../../component/layout/AdminMenu'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import {Select} from "antd";
 const {Option} = Select
 const CreateProduct = () => {
+    const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
     const [ name, setName ] = useState("");
     const [ description, setDescription ] = useState("");
@@ -13,8 +15,8 @@ const CreateProduct = () => {
     const [ price, setPrice ] = useState("");
     const [ quentity, setQuentity ] = useState("");
     const [ shipping, setShipping ] = useState("");
-    const [photo, setPhoto] = useState("");
-
+    const [photo, setPhoto] = useState(null);
+    const [error, setError] = useState();
 
     //get all category
        const getAllCategory = async() =>{
@@ -33,6 +35,16 @@ const CreateProduct = () => {
         getAllCategory();
        
     },[])
+    useEffect(()=>{
+        if(!photo) return;
+        const MAX_SIZE = 2097151;
+        if(photo.size > MAX_SIZE){
+            setError('File is too large. Maximum size is 2MB.');
+        }else{
+            setError('');
+        }
+    },[photo])
+
 
     const handleCreateProduct = async(e) =>{
         e.preventDefault()
@@ -45,15 +57,16 @@ const CreateProduct = () => {
             product.append("quantity", quentity)
             product.append("photo", photo)
             product.append("shipping", shipping)
-            const {data} = await axios.post(`${process.env.REACT_APP_API}/api/v1/product/create-product`, product)
-            if(data?.success){
-                toast.success(data?.message);
+            const res = await axios.post(`${process.env.REACT_APP_API}/api/v1/product/create-product`,(product))
+            if(res.data.success){
+                toast.success(res.data.message)
+                navigate("/Dashboard/admin/products");
             }else{
-                toast.error(data?.message)
+                toast.error(res.data.message);
             }
 
         }catch(error){
-            console.log(error);
+            console.table(error);
             toast.error("Something wrong in create product");
         }
     }
@@ -97,6 +110,7 @@ const CreateProduct = () => {
                     <label className='btn btn-outline-secondary col-md-12'>
                         {photo ?  photo.name : "Upload Photo"}  
                         <input type="file" name="Photo" accept="image/*" onChange={(e)=>setPhoto(e.target.files[0])} hidden/>
+                        {error && <p style={{ color: 'red' }}>{error}</p>}
                     </label>
                 </div>
                 <div className="mb-3">

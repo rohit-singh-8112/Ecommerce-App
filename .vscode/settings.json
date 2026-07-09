@@ -4,7 +4,16 @@
     "comments": false,
     "strings": true
   },
-  "editor.suggestSelection": "first",
+  "editor.suggestSelection": "recentlyUsed",
   "editor.tabCompletion": "on",
-  "editor.inlineSuggest.enabled": true
+  "editor.inlineSuggest.enabled": true,
+  "files.autoSave": "off",
+  "editor.autoClosingBrackets": "always",
+  "editor.autoIndentOnPaste": true,
+  "editor.suggest.selectionMode": "whenQuickSuggestion",
+  "editor.suggest.shareSuggestSelections": true,
+  "editor.suggest.snippetsPreventQuickSuggestions": true,
+  "terminal.integrated.suggest.selectionMode": "partial",
+  "js/ts.suggest.completeFunctionCalls": true,
+  "markdown.suggest.paths.includeWorkspaceHeaderCompletions": "onSingleOrDoubleHash"
 }

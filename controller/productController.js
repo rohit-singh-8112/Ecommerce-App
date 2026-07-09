@@ -18,12 +18,13 @@ import slugify from "slugify";
                 return res.status(500).send({error:"Category is Required"});
             case !quantity:
                 return res.status(500).send({error:"Quantity is Required"});
-            case !photo || photo.size > 1000000:
+            case !photo || photo.size > 2097152:
                 return res.status(500).send({error:"Photo is Required and must be less than 1MB"});
         }
 
         const products = new ProductModel({...req.fields, slug:slugify(name)});
         if(photo){
+  
             products.photo.data = fs.readFileSync(photo.path);
             products.photo.contentType= photo.type;
         }
@@ -142,7 +143,7 @@ import slugify from "slugify";
             case !quantity: {
                 return res.status(400).send({ message: "Quantity is Required" });
             }
-            case photo && photo.size > 1000000: {
+            case photo && photo.size > 2097152: {
                 return res.status(400).send({ message: "Photo is Required and should be less than 1MB" });
             }
         }
@@ -157,10 +158,11 @@ import slugify from "slugify";
         );
 
         if (photo) {
-            products.photo.data = fs.readFileSync(photo.filepath);
+            products.photo.data = fs.readFileSync(photo.path);
             products.photo.contentType = photo.type;
-            await products.save();
+            
         }
+        await products.save();
         res.status(200).send({
             success:true,
             message:"Product Updated Successfully",

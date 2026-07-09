@@ -37,13 +37,12 @@ const Product = () => {
                     <h1 className="text-center">AllProducts</h1>
                     <div className="d-flex flex-wrap m-2 justify-content-evenly">
                         {products.map((p)=>
-                            <NavLink to={`/dashboard/admin/update-product/${p.slug}`} className="Product-Link">
-                                <div className="card mb-2" style={{width: '18rem'}} kay={p._id}>
-                                    <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`} className="card-img-top" height="250px" alt={p.name} />
+                            <NavLink to={`/dashboard/admin/update-product/${p.slug}`}  key={p._id} className="Product-Link">
+                                <div className="card mb-2" style={{width: '18rem'}}>
+                                    <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`} loading="lazy" className="card-img-top" height="250px" alt={p.name} />
                                     <div className="card-body">
                                         <h5 className="card-title">{p.name}</h5>
                                         <p className="card-text">{p.description}</p>
-                                        
                                     </div>
                                 </div>
                             </NavLink>
