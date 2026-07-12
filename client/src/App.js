@@ -10,6 +10,7 @@ import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import Cart from "./pages/Cart";
 import SallerHomePage from "./pages/SallerHomePage";
+import SearchPage from "./pages/SearchPage";
 import Dashboard from "./pages/user/Dashboard";
 import PrivateRoute from "./component/Routes/Private";
 import ForgetPassword from "./pages/auth/ForgetPassword";
@@ -22,6 +23,7 @@ import Profile from "./pages/user/Profile";
 import Order from "./pages/user/Order";
 import Product from "./pages/admin/Product";
 import UpdateProduct from "./pages/admin/UpdateProduct";
+import ProductDetails from "./pages/ProductDetails";
 
 
 
@@ -31,6 +33,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="product/:slug" element={<ProductDetails />} />
         <Route path="/Dashboard" element={<PrivateRoute />}>
           <Route path="user" element={<Dashboard />} />
           <Route path="user/profile" element={<Profile />} />
@@ -47,6 +50,7 @@ function App() {
         <Route path="/About" element={<About />} />
         <Route path="/Contect" element={<Contect />} />
         <Route path="/Policy" element={<Policy />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<PageNotFound />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Register" element={<Register />} />

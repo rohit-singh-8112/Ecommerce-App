@@ -48,7 +48,7 @@ import slugify from "slugify";
 
  export const getProductController = async(req,res) =>{
     try{
-      const products = await ProductModel.find({}).populate("category").select("-photo").limit(12).sort({createdAt:-1});
+      const products = await ProductModel.find({}).populate("category").select("-photo").sort({createdAt:-1});
         res.status(200).send({
             success:true,
             totalCount:products.length,
@@ -186,8 +186,8 @@ import slugify from "slugify";
     try{
         const {checked, radio} = req.body;
         let arg = {}
-        if(checked.length>0) arg.checked = checked;
-        if(radio.length>0) arg.radio = {$gte: radio[0], $lte:radio[1]};
+        if(checked.length>0) arg.category = checked;
+        if(radio.length>0) arg.price = {$gte: radio[0], $lte:radio[1]};
         const products = await ProductModel.find(arg);
         res.status(200).send({
             success:true,
@@ -201,4 +201,46 @@ import slugify from "slugify";
             error
         })
     }
- }
+ };
+
+export const searchProductController = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+
+    const result = await ProductModel.find({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+      ],
+    }).select("-photo");
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      success: false,
+      message: "Error in search products API",
+      error,
+    });
+  }
+};
+
+export const relatedProductController = async(req,res) =>{
+    try{
+        const {pid, cid} = req.params
+        const product = await ProductModel.find({
+            category:cid,
+            _id:{$ne:pid}
+        }).select("-photo").limit(5).populate("category")
+        res.status(200).send({
+            success:true,
+            product
+        })
+    }catch(error){
+        res.status(400).sent({
+            success:false,
+            message:"error geting related product",
+            error
+        })
+    }
+}
