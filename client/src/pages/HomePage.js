@@ -5,6 +5,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Prices } from "../component/Prices";
 import {Checkbox,Radio} from 'antd';
+import toast from "react-hot-toast";
+import { useCart } from "../context/Cart";
+
+
 
 const HomePage = () => {
   // const {auth, setAuth} = useAuth();
@@ -14,6 +18,7 @@ const HomePage = () => {
   const [radio, setRadio] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
+  const {cart, setCart} = useCart();
   const productsPerPage = 8;
 
   const lastIndex = currentPage * productsPerPage;
@@ -124,7 +129,7 @@ const filterProduct = async()=>{
                           <p>₹{p.price}</p>
                           <div className="d-flex justify-content-around">
                             <button className="btn btn-secondary" onClick={()=> navigate(`/product/${p.slug}`)}>More Details</button>
-                            <button className="btn btn-primary">Add To Cart</button>
+                            <button className="btn btn-primary"onClick={()=>{setCart([...cart, p]); toast.success("Item added to cart")}} >Add To Cart</button>
                           </div>
                       </div>
                   </div>

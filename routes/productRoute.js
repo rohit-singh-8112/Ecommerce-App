@@ -7,7 +7,8 @@ import { createProductController,
     updateProductController,
     filterProductController,
     searchProductController,
-    relatedProductController } from "../controller/productController.js";
+    relatedProductController,
+    categoryProductController } from "../controller/productController.js";
     
 import { requireSignIn, isAdmin } from "../middlewares/authMiddleware.js";
 import formidable from "express-formidable";
@@ -22,4 +23,5 @@ router.put("/update-product/:pid", requireSignIn, isAdmin, formidable(), updateP
 router.post("/filter-product", filterProductController)
 router.get("/search/:keyword", searchProductController)
 router.get("/related-product/:pid/:cid", relatedProductController)
+router.get("/category-product/:slug", categoryProductController)
 export default router;

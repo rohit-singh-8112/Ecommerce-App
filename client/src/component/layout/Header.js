@@ -1,12 +1,17 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { RiShoppingBag3Fill } from "react-icons/ri";
 import { useAuth } from "../../context/auth";
 // import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import SearchInput from "../Form/SearchInput";
+import useCategory from "../../hooks/useCategory";
+import { useCart } from "../../context/Cart";
+import { Badge } from "antd";
 
 const Header = () => {
   const {auth, setAuth} = useAuth();
+  const {cart} = useCart();
+  const categories = useCategory();
   // const navigate = useNavigate();
     const handalLogout = () => {
         localStorage.removeItem('auth');
@@ -48,11 +53,20 @@ const Header = () => {
                 </NavLink>
               </li>
 
-              <li className="nav-item">
-                <NavLink to="/Category" className="nav-link">
-                  category
-                </NavLink>
+              <li className="nav-item dropdown">
+                <Link to="/categories" className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Category
+                </Link>
+                <ul className="dropdown-menu">
+                <Link className="dropdown-item" to="/categories">ALL Category</Link>
+                  {categories.map((c)=>
+                    <>
+                      <Link key={c._id} className="dropdown-item" to={`/categories/${c.slug}`}>{c.name}</Link>
+                    </>
+                  )}
+                </ul>
               </li>
+
               {!auth.user ? (
                 <>
                   <li className="nav-item">
@@ -77,13 +91,9 @@ const Header = () => {
                 </>
               )}
               <li className="nav-item">
-                <NavLink
-                  to="/Cart"
-                  className="nav-link disabled"
-                  aria-disabled="true"
-                >
-                  Cart(0)
-                </NavLink>
+                <Badge count={cart?.length || 0} showZero>
+                  <NavLink to="/cart" className="nav-link" > Cart </NavLink>
+                </Badge>
               </li>
             </ul>
           </div>

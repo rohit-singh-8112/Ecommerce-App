@@ -3,13 +3,16 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../component/layout/Layout'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-
+import {useCart} from '../context/Cart'
+import toast from 'react-hot-toast'
 
 const ProductDetails = () => {
     const params = useParams();
     const[product, setProduct] = useState([]);
     const[relatedProduct, setRelatedProduct] = useState([]);
     const navigate = useNavigate()
+    const{cart, setCart} = useCart();
+
     const getProduct = async() =>{
         try{
             const {data} = await axios.get(`${process.env.REACT_APP_API}/api/v1/product/get-product/${params.slug}`);
@@ -51,6 +54,7 @@ const ProductDetails = () => {
         </div>
         <hr />
         <h4 className='text-center'>Similar</h4>
+        {relatedProduct.length<1 && <p className='text-center'>No Similar Products Found</p>}
         <hr />
         <div className="d-flex flex-wrap ">
             {relatedProduct.map((p)=>
@@ -62,7 +66,7 @@ const ProductDetails = () => {
                           <p>₹{p.price}</p>
                           <div className="d-flex justify-content-around">
                             <button className="btn btn-secondary" onClick={()=> navigate(`/product/${p.slug}`)}>More Details</button>
-                            <button className="btn btn-primary">Add To Cart</button>
+                            <button className="btn btn-primary"onClick={()=>{setCart([...cart, p]); toast.success("Item added to cart")}} >Add To Cart</button>
                           </div>
                       </div>
                   </div>

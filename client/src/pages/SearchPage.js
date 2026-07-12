@@ -33,7 +33,7 @@ const SearchPage = () => {
                     <h5 className="card-title">{product.name.substring(0,20)}</h5>
                     <p className="card-text">{product.description?.substring(0, 50)}...</p>
                     <p className="fw-bold">₹{product.price}</p>
-                    <NavLink to={`/dashboard/admin/update-product/${product.slug}`} className="mt-auto btn btn-primary">
+                    <NavLink to={`/product/${product.slug}`} className="mt-auto btn btn-primary">
                       View Product
                     </NavLink>
                   </div>
