@@ -120,7 +120,6 @@ const filterProduct = async()=>{
           <h1 className="text-center">All Product</h1>
           <div className="d-flex flex-wrap justify-content-around">
             {currentProducts.map((p)=>
-              
                   <div className="card m-2" key={p._id} style={{width: '18rem'}}>
                       <img src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`} loading="lazy" className="card-img-top" height="250px" alt={p.name} />
                       <div className="card-body">
