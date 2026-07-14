@@ -32,8 +32,12 @@ const Profile = () => {
       const res = await axios.put(`${process.env.REACT_APP_API}/api/v1/auth/update-user`,{ name, email, phone, address})
       if(res.data.success){
         toast.success(res.data.message);
-        setAuth({user:data?.updateUser})
-        navigate("/")
+        setAuth({...auth, user:data?.updateUser})
+        let ls = JSON.parse(localStorage.getItem("auth"))
+        ls.user = data?.updateUser;
+        localStorage.setItem('auth', JSON.stringify(ls))
+        toast.success("profile updated sccessfully")
+       
       }else{
         toast.error(res.data.message);
       }
