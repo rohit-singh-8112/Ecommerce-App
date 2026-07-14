@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import Layout from '../../component/layout/Layout'
 import UserMenu from '../../component/layout/UserMenu'
-import { data, useNavigate } from "react-router-dom";
+
 import axios from 'axios';
 import toast from 'react-hot-toast';
 // import { BiHide, BiShowAlt } from "react-icons/bi";
@@ -15,7 +15,7 @@ const Profile = () => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   // const [show, setShow] = useState(true);
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     if (auth?.user) {
@@ -29,9 +29,9 @@ const Profile = () => {
   const handlerSubmit = async(e) =>{
     e.preventDefault();
     try{
-      const res = await axios.put(`${process.env.REACT_APP_API}/api/v1/auth/update-user`,{ name, email, phone, address})
-      if(res.data.success){
-        toast.success(res.data.message);
+      const {data} = await axios.put(`${process.env.REACT_APP_API}/api/v1/auth/update-user`,{ name, email, phone, address})
+      if(data.success){
+        toast.success(data.message);
         setAuth({...auth, user:data?.updateUser})
         let ls = JSON.parse(localStorage.getItem("auth"))
         ls.user = data?.updateUser;
@@ -39,7 +39,7 @@ const Profile = () => {
         toast.success("profile updated sccessfully")
        
       }else{
-        toast.error(res.data.message);
+        toast.error(data.message);
       }
     }catch(error){
       console.log(error);
