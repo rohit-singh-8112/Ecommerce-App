@@ -186,7 +186,7 @@ export const updateProfileController = async(req,res) =>{
 export const updateAddressController = async(req, res) =>{
     try{
         const {address} = req.body
-        const user = await userModel.findByIdAndUpdate(
+        const updateAddress = await userModel.findByIdAndUpdate(
             req.user._id,
             { address },
             { new: true }
@@ -195,7 +195,7 @@ export const updateAddressController = async(req, res) =>{
           res.status(200).send({
             success: true,
             message: "Address updated successfully",
-            user,
+            updateAddress,
           });
         } catch (error) {
           console.log(error);

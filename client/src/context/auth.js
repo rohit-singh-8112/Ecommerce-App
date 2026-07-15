@@ -23,6 +23,7 @@ useEffect(()=>{
             token:parseData.token,
         });
     }
+    //eslint-disable-next-line
 },[]);
    
 

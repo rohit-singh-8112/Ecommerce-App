@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import Layout from '../component/layout/Layout'
 import { useCart } from '../context/Cart'
 import { useAuth } from '../context/auth'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import AddressForm from '../component/Form/AddressForm';
 import { Modal} from 'antd';
 import toast from 'react-hot-toast';
@@ -11,17 +11,19 @@ import axios from 'axios';
 
 const CartPage = () => {
     const {cart, setCart} = useCart();
-    const {auth} = useAuth();
+    const {auth , setAuth} = useAuth();
     const [visible, setVisible] = useState(false);
     const [updateAddress, setUpdateAddress] = useState("")
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     
     const handleUpdate = async(e) =>{
         e.preventDefault()
         try{
             const {data} = await axios.patch(`${process.env.REACT_APP_API}/api/v1/auth/update-address`,{address:updateAddress})
             toast.success(data?.message);
-
+            localStorage.setItem( 'auth', JSON.stringify({ ...auth, user: { ...auth.user, address: data.updateAddress.address, }, }) );
+            setVisible(false)
+         
         }catch(error){
             console.log(error)
             toast.error("wrong in address something")
@@ -86,16 +88,27 @@ const CartPage = () => {
                     <p>Total | Checkout | Payment</p>
                     <hr />
                     <h4>Total: {totalPrice()}</h4>
-                    <h5>{auth?.user?.address}</h5>
-                    <button className="btn btn-primary ms-2" onClick={()=>{setVisible(true)}}>Update Address</button>
-                    <Modal
-                title="Update Address"
-                closable={{ 'aria-label': 'Custom Close Button' }}
-                open={visible}
-                footer={null}
-                onCancel={()=>setVisible(false)}>
-                <AddressForm value={updateAddress} setValue={setUpdateAddress} handleSubmit={handleUpdate} />
-            </Modal>
+                    {auth?.user?.address ?(
+                        <>
+                           
+                            <h5><strong>Current Address:</strong> {auth?.user?.address}</h5>
+                            <button className="btn btn-primary ms-2" onClick={()=>{setVisible(true)}}>Update Address</button>
+                            <Modal
+                                title="Update Address"
+                                closable={{ 'aria-label': 'Custom Close Button' }}
+                                open={visible}
+                                footer={null}
+                                onCancel={()=>setVisible(false)}
+                            >
+                                <AddressForm value={updateAddress} setValue={setUpdateAddress} handleSubmit={handleUpdate} />
+                            </Modal>
+                        </>
+                    ):(
+                        <div className='mb-3'>
+                            {auth?.token ? (<button className='btn btn-outline-warning' onClick={()=>navigate("/dashboard/user/profile")} >Update Address</button> ):(<button className='btn btn-outline-warning' onClick={()=>navigate("/login", {state:"/cart",})} >Please Login to Checkout</button>)}
+                        </div>
+                    )}
+                    
                 </div>
             </div>
         </div>
