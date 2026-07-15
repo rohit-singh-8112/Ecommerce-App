@@ -182,3 +182,27 @@ export const updateProfileController = async(req,res) =>{
         })
     }
 }
+
+export const updateAddressController = async(req, res) =>{
+    try{
+        const {address} = req.body
+        const user = await userModel.findByIdAndUpdate(
+            req.user._id,
+            { address },
+            { new: true }
+          );
+      
+          res.status(200).send({
+            success: true,
+            message: "Address updated successfully",
+            user,
+          });
+        } catch (error) {
+          console.log(error);
+          res.status(500).send({
+            success: false,
+            message: "Error updating address",
+            error: error.message,
+          });
+        }
+      }; 
