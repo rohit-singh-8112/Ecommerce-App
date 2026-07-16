@@ -22,6 +22,7 @@ const CartPage = () => {
             const {data} = await axios.patch(`${process.env.REACT_APP_API}/api/v1/auth/update-address`,{address:updateAddress})
             toast.success(data?.message);
             localStorage.setItem( 'auth', JSON.stringify({ ...auth, user: { ...auth.user, address: data.updateAddress.address, }, }) );
+            setAuth({...auth, user:{...auth.user, address:data.updateAddress.address}})
             setVisible(false)
          
         }catch(error){
@@ -90,7 +91,6 @@ const CartPage = () => {
                     <h4>Total: {totalPrice()}</h4>
                     {auth?.user?.address ?(
                         <>
-                           
                             <h5><strong>Current Address:</strong> {auth?.user?.address}</h5>
                             <button className="btn btn-primary ms-2" onClick={()=>{setVisible(true)}}>Update Address</button>
                             <Modal
