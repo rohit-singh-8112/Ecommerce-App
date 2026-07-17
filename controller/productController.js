@@ -122,7 +122,7 @@ import slugify from "slugify";
     }
  }
 
- export const updateProductController = async(req,res) =>{
+export const updateProductController = async(req,res) =>{
 
     try{
         const {name,description,price,category,quantity,shipping} = req.fields;
@@ -264,3 +264,39 @@ export const categoryProductController = async(req,res) =>{
         })
     }
 }
+
+
+export const updateProductController = async (req, res) => {
+    try {
+      const { price } = req.fields;
+
+      if (!price) {
+        return res.status(400).send({
+          success: false,
+          message: "Price is required",
+        });
+      }
+  
+      const product = await ProductModel.findByIdAndUpdate(
+        req.params.pid,
+        {
+          ...req.fields
+        },
+        { new: true }
+      );
+  
+      res.status(200).send({
+        success: true,
+        message: "Product Updated Successfully",
+        product,
+      });
+  
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        success: false,
+        message: "Error in Updating Product",
+        error,
+      });
+    }
+  };
