@@ -10,6 +10,7 @@
     "antd": "^6.5.0",
     "axios": "^1.18.1",
     "bootstrap": "^5.3.8",
+    "braintree-web-drop-in-react": "^1.2.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-helmet": "^6.1.0",
