@@ -7,7 +7,7 @@
   "editor.suggestSelection": "recentlyUsed",
   "editor.tabCompletion": "on",
   "editor.inlineSuggest.enabled": true,
-  "files.autoSave": "off",
+  "files.autoSave": "afterDelay",
   "editor.autoClosingBrackets": "always",
   "editor.autoIndentOnPaste": true,
   "editor.suggest.selectionMode": "whenQuickSuggestion",

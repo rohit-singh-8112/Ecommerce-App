@@ -2,6 +2,23 @@ import ProductModel from "../models/productModel.js";
 import CategoryModel from "../models/CategoryModel.js";
 import fs from "fs";
 import slugify from "slugify";
+import braintree from "braintree";
+import orderModel from "../models/orderModel.js";
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+//Payment Gateway 
+var gateway = new braintree.BraintreeGateway({
+    environment: braintree.Environment.Sandbox,
+    merchantId: process.env.BRAINTREE_MERCHANT_ID,
+    publicKey: process.env.BRAINTREE_PUBLIC_KEY,
+    privateKey: process.env.BRAINTREE_PRIVATE_KEY,
+  });
+
+
+
+
 
  export const createProductController = async(req,res) =>{
     try{
@@ -238,7 +255,7 @@ export const relatedProductController = async(req,res) =>{
             product
         })
     }catch(error){
-        res.status(400).sent({
+        res.status(400).send({
             success:false,
             message:"error geting related product",
             error
@@ -266,3 +283,53 @@ export const categoryProductController = async(req,res) =>{
 }
 
 
+
+//payment gateway api
+//token
+export const braintreeTokenController = async(req,res) =>{
+    try{
+        gateway.clientToken.generate({}, function(err, response){
+            if(err){
+                res.status(500).sent(err)
+            }else{
+                res.send(response)
+            }
+        })
+
+    }catch(error){
+        console.log(error)
+    }
+}
+
+
+//payment
+export const braintreePaymentController = async(req,res) =>{
+    try{
+        const {cart, nonce} = req.body
+        let total = 0;
+        cart.forEach((item) => {
+            total += item.price;
+          });
+        let newTransaction = gateway.transaction.sale({
+            amount: total.toFixed(2),
+            paymentMethodNonce: nonce,
+            options:{
+                submitForSettlement:true
+            }
+        }, async function(error,result){
+            if(result){
+                await new orderModel({
+                    products: cart,
+                    payment: result,
+                    buyer:req.user._id
+                }).save()
+                res.json({ok:true})
+            }else{
+                res.status(500).send(error)
+            }
+        })
+    }catch(error){
+        console.log(error)
+        res.status(500).send('Payment processing failed')
+    }
+};

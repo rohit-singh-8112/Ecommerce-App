@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Layout from '../component/layout/Layout'
 import { useCart } from '../context/Cart'
 import { useAuth } from '../context/auth'
@@ -7,15 +7,20 @@ import AddressForm from '../component/Form/AddressForm';
 import { Modal} from 'antd';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import DropIn from "braintree-web-drop-in-react";
 
 
 const CartPage = () => {
     const {cart, setCart} = useCart();
     const {auth , setAuth} = useAuth();
     const [visible, setVisible] = useState(false);
-    const [updateAddress, setUpdateAddress] = useState("")
+    const [updateAddress, setUpdateAddress] = useState("");
+    const [clientToken, setClientToken] = useState("");
+    const [instance, setInstance] = useState("");
+    const [loding, setLoding] = useState(false);
     const navigate = useNavigate();
-    
+
+
     const handleUpdate = async(e) =>{
         e.preventDefault()
         try{
@@ -55,7 +60,23 @@ const CartPage = () => {
             console.log(error)
         }
     }
+    const getToken = async() =>{
+        try{
+            const {data} = await axios.get(`${process.env.REACT_APP_API}/api/v1/product/braintree/token`)
+            setClientToken(data?.clientToken)
+            console.log("client:", data?.clientToken)
 
+        }catch(error){
+            console.log(error)
+        }
+    }
+    useEffect(()=>{
+        getToken();
+    },[])
+
+    const handlePayment = async () => {
+        
+      };
   return (
     <Layout>
         <div className="container">
@@ -108,7 +129,20 @@ const CartPage = () => {
                             {auth?.token ? (<button className='btn btn-outline-warning' onClick={()=>navigate("/dashboard/user/profile")} >Update Address</button> ):(<button className='btn btn-outline-warning' onClick={()=>navigate("/login", {state:"/cart",})} >Please Login to Checkout</button>)}
                         </div>
                     )}
-                    
+                    <div className="mt-2">
+                    <DropIn
+  options={{
+    authorization: clientToken,
+    paypal: {
+      flow: "checkout",
+      amount: "10.00",
+      currency: "USD",
+    },
+  }}
+  onInstance={(instance) => setInstance(instance)}
+/>
+                    <button className='btn btn-primary' onClick={handlePayment}>Make Payment</button>
+                    </div>
                 </div>
             </div>
         </div>
